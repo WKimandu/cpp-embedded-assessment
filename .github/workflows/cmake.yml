@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    # Specify GitHub-hosted runner
     runs-on: ubuntu-latest
 
     steps:
