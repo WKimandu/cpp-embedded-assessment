@@ -10,6 +10,7 @@
 #include "assessment/event/event_processor.h"
 #include "assessment/memory/memory_pool.h"
 #include "assessment/hardware/gpio_simulator.h"
+#include "queue/lockbased_queue_factory.h"
 
 int main() {
     std::cout << "Real-time System Simulation" << std::endl;
@@ -20,8 +21,8 @@ int main() {
         auto memoryPool = std::make_shared<assessment::memory::MemoryPool>(1024 * 1024); // 1MB pool
         std::cout << "Memory pool initialized with 1MB capacity" << std::endl;
 
-        // Initialize queue
-        auto eventQueue = std::make_shared<assessment::queue::ThreadSafeQueue<assessment::event::Event>>();
+        // Initialize queue using the LockBasedQueueFactory
+        auto eventQueue = assessment::queue::LockBasedQueueFactory::create<assessment::event::Event>();
         std::cout << "Event queue initialized" << std::endl;
 
         // Initialize event processor

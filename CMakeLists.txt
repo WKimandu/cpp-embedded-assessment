@@ -21,9 +21,18 @@ file(GLOB_RECURSE SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
+# Header files - explicitly include header files in the build
+file(GLOB_RECURSE HEADER_FILES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+)
+
 # Add library
-add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 # Add threading support
 find_package(Threads REQUIRED)
@@ -81,5 +90,11 @@ install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_app
 # Install headers
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION include
+    FILES_MATCHING PATTERN "*.h"
+)
+
+# Install src headers (for internal headers)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/
+    DESTINATION include/src
     FILES_MATCHING PATTERN "*.h"
 ) 
