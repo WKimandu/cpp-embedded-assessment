@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    # Specify GitHub-hosted runner
-    runs-on: ubuntu-latest
+    # Use self-hosted runner
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
@@ -22,5 +22,9 @@ jobs:
       run: ctest -C Release --verbose
     - name: Static analysis
       run: |
-        sudo apt-get update && sudo apt-get install -y cppcheck
+        # Skip apt-get for self-hosted runner if cppcheck is already installed
+        # Use 'which' to check if cppcheck exists, otherwise install it
+        if ! which cppcheck > /dev/null; then
+          sudo apt-get update && sudo apt-get install -y cppcheck
+        fi
         cppcheck --enable=all --suppress=missingIncludeSystem --error-exitcode=1 include/ src/ 
